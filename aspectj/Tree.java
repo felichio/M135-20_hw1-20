@@ -3,7 +3,7 @@
 public class Tree {
 
     private TreeNode root;
-
+    int counter = 0;
     private class TreeNode {
         private int value;
         private TreeNode left;
@@ -50,8 +50,8 @@ public class Tree {
         return t;
     }
 
-    public void delete(int value) {
-        root = delete(value, root);
+    public void remove(int value) {
+        root = remove(value, root);
     }
 
     private int findSmallestValue(TreeNode t) {
@@ -59,7 +59,7 @@ public class Tree {
         return findSmallestValue(t.left);
     }
 
-    private TreeNode delete(int value, TreeNode t) {
+    private TreeNode remove(int value, TreeNode t) {
         if (t == null) return t;
         if (t.value == value) {
             if (t.left == null && t.right == null) {
@@ -70,13 +70,13 @@ public class Tree {
                 return t.left;
             } else {
                 t.value = findSmallestValue(t.right);
-                t.right = delete(t.value, t.right);
+                t.right = remove(t.value, t.right);
             }
 
         } else if (value <= t.value) {
-            t.left = delete(value, t.left);
+            t.left = remove(value, t.left);
         } else {
-            t.right = delete(value, t.right);
+            t.right = remove(value, t.right);
         }
 
         return t;
@@ -92,5 +92,6 @@ public class Tree {
         traverse(t.left);
         System.out.print(t.value + " ");
         traverse(t.right);
+        counter++;
     }
 }

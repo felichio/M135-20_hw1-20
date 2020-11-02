@@ -2,10 +2,29 @@
 
 aspect Test {
     
+    private volatile boolean Tree.mutex = true;
 
-    pointcut changes(Animal a, String b): target(a) && call(String Animal.setName(String)) && args(b);
+    pointcut insertChange(Tree t, int a): target(t) && call(public void Tree.insert(int)) && args(a);
+    
+    pointcut removeChange(Tree t, int a): target(t) && call(public void Tree.remove(int)) && args(a);
 
-    after(Animal a, String b) returning (String c): changes(a, b) {
-        System.out.println("I am going to name it : " + b + c);
+    void around(Tree t, int a): insertChange(t, a) {
+        if (t.mutex) {
+            t.mutex = false;
+            proceed(t, a);
+            t.mutex = true;
+        } else {
+            t.insert(a);
+        }
+    }
+
+    void around(Tree t, int a): removeChange(t, a) {
+        if (t.mutex) {
+            t.mutex = false;
+            proceed(t, a);
+            t.mutex = true;
+        } else {
+            t.remove(a);
+        }
     }
 }
