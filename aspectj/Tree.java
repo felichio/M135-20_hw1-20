@@ -3,7 +3,6 @@
 public class Tree {
 
     private TreeNode root;
-    int counter = 0;
     private class TreeNode {
         private int value;
         private TreeNode left;
@@ -83,15 +82,15 @@ public class Tree {
     }
 
 
-    public void traverse() { // in-order traversal
-        traverse(root);
+    public int traverse() { // in-order traversal, returns the number of TreeNodes inside Tree
+        return traverse(root);
     }
 
-    private void traverse(TreeNode t) {
-        if (t == null) return;
-        traverse(t.left);
+    private int traverse(TreeNode t) {
+        if (t == null) return 0;
+        int a = traverse(t.left);
         System.out.print(t.value + " ");
-        traverse(t.right);
-        counter++;
+        int b = traverse(t.right);
+        return a + b + 1;
     }
 }

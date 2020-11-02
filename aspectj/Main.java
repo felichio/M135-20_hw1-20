@@ -23,7 +23,8 @@ public class Main {
             ex.printStackTrace();
         }
 
-        a.traverse();
-        System.out.println("------ " + a.counter);
+        int num = a.traverse();
+        assert num == 2000 : "Number of elements inside tree must be 2000";
+        System.out.println();
     }
 }
