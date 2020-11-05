@@ -29,6 +29,7 @@ public class Tree {
     }
 
     private boolean lookup(int value, TreeNode t) {
+        if (t == null) return false;
         if (t.value == value) return true;
         else if (value <= t.value) return lookup(value, t.left);
         else return lookup(value, t.right);
