@@ -2,39 +2,61 @@
 
 aspect Test {
     
-    private volatile boolean Tree.mutex = true; // This is not enough, but its ok for the demo (should use AtomicBoolean instead)
+    private volatile boolean Tree.writer = true;
+    private volatile int Tree.readers = 0;
 
-    pointcut insertChange(Tree t, int a): target(t) && call(public void Tree.insert(int)) && args(a);
+    pointcut insertChange(Tree t, int a): target(t) && execution(public void Tree.insert(int)) && args(a);
     
-    pointcut removeChange(Tree t, int a): target(t) && call(public void Tree.remove(int)) && args(a);
+    pointcut removeChange(Tree t, int a): target(t) && execution(public void Tree.remove(int)) && args(a);
 
-    pointcut lookupCall(Tree t, int a): target(t) && call(public boolean Tree.lookup(int)) && args(a);
+    pointcut lookupCall(Tree t, int a): target(t) && execution(public boolean Tree.lookup(int)) && args(a);
 
     void around(Tree t, int a): insertChange(t, a) { 
-        if (t.mutex) {   // t.mutex.compareAndSet(true, false) condition, in case of AtomicBoolean implementation
-            t.mutex = false; // skipped step in case of AtomicBoolean implementation
+        synchronized(t) {
+            while (!t.writer || t.readers > 0) {
+                try {
+                    t.wait();
+                } catch (InterruptedException ex) {
+                    return ;
+                }
+            }
+            t.writer = false;
             proceed(t, a);
-            t.mutex = true; // t.mutex.set(true)
-        } else {
-            t.insert(a);
+            t.writer = true;
+            t.notifyAll();
         }
     }
 
     void around(Tree t, int a): removeChange(t, a) {
-        if (t.mutex) {       // same with above, in case of AtomicReference use
-            t.mutex = false;
+        synchronized(t) {
+            while (!t.writer || t.readers > 0) {
+                try {
+                    t.wait();
+                } catch (InterruptedException ex) {
+                    return ;
+                }
+            }
+            t.writer = false;
             proceed(t, a);
-            t.mutex = true;
-        } else {
-            t.remove(a);
+            t.writer = true;
+            t.notifyAll();
         }
     }
 
     boolean around(Tree t, int a): lookupCall(t, a) {
-        if (t.mutex) {
-            return proceed(t, a);
-        } else {
-            return t.lookup(a);
+        synchronized(t) {
+            while (!t.writer) {
+                try {
+                    t.wait();
+                } catch (InterruptedException ex) {
+                    return false;
+                }
+            }
+            ++t.readers;
+            boolean q = proceed(t, a);
+            --t.readers;
+            t.notify();
+            return q;
         }
     }
 }

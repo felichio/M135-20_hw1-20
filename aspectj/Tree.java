@@ -90,7 +90,6 @@ public class Tree {
     private int traverse(TreeNode t) {
         if (t == null) return 0;
         int a = traverse(t.left);
-        System.out.print(t.value + " ");
         int b = traverse(t.right);
         return a + b + 1;
     }
