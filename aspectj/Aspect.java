@@ -8,6 +8,8 @@ aspect Test {
     
     pointcut removeChange(Tree t, int a): target(t) && call(public void Tree.remove(int)) && args(a);
 
+    pointcut lookupCall(Tree t, int a): target(t) && call(public boolean Tree.lookup(int)) && args(a);
+
     void around(Tree t, int a): insertChange(t, a) { 
         if (t.mutex) {   // t.mutex.compareAndSet(true, false) condition, in case of AtomicBoolean implementation
             t.mutex = false; // skipped step in case of AtomicBoolean implementation
@@ -25,6 +27,14 @@ aspect Test {
             t.mutex = true;
         } else {
             t.remove(a);
+        }
+    }
+
+    boolean around(Tree t, int a): lookupCall(t, a) {
+        if (t.mutex) {
+            return proceed(t, a);
+        } else {
+            return t.lookup(a);
         }
     }
 }
