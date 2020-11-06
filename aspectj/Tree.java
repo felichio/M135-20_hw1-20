@@ -83,14 +83,14 @@ public class Tree {
     }
 
 
-    public int traverse() { // in-order traversal, returns the number of TreeNodes inside Tree
-        return traverse(root);
+    public int getNumberOfTreeNodes() {
+        return getNumberOfTreeNodes(root);
     }
 
-    private int traverse(TreeNode t) {
+    private int getNumberOfTreeNodes(TreeNode t) {
         if (t == null) return 0;
-        int a = traverse(t.left);
-        int b = traverse(t.right);
+        int a = getNumberOfTreeNodes(t.left);
+        int b = getNumberOfTreeNodes(t.right);
         return a + b + 1;
     }
 }
