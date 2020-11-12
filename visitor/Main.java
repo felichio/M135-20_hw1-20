@@ -27,35 +27,37 @@ public class Main {
                 Visitor.class.getClassLoader(), 
                 new Class[] {Visitor.class},
                 (Object proxy, Method method, Object[] fargs) -> {
-                    if (fargs[0] instanceof GenericNode) {
-                        System.out.println("I am a GenericNode running through the proxy");
-                        System.out.println("My value is : " + ((GenericNode) fargs[0]).getValue());
-                        System.out.println("Let's run PrintVisitor's implementation too!");
-                        method.invoke(p, (GenericNode) fargs[0]); // This is redundant, just for demo
-                        System.out.println("----- Finished --------");
-                    } else if (fargs[0] instanceof ListNode) {
-                        System.out.println("I am a ListNode running through the proxy");
-                        System.out.println("My value is : " + ((ListNode) fargs[0]).getValue());
-                        System.out.println("Let's run PrintVisitor's implementation too!");
-                        method.invoke(p, (ListNode) fargs[0]); // This is redundant, just for demo
-                        System.out.println("----- Finished --------");
-                    } else if (fargs[0] instanceof HeapNode) {
-                        System.out.println("I am a HeapNode running through the proxy");
-                        System.out.println("My value is : " + ((HeapNode) fargs[0]).getValue());
-                        System.out.println("Let's run PrintVisitor's implementation too!");
-                        method.invoke(p, (HeapNode) fargs[0]); // This is redundant, just for demo
-                        System.out.println("----- Finished --------");
-                    } else if (fargs[0] instanceof TreeNode) {
-                        System.out.println("I am a TreeNode running through the proxy");
-                        System.out.println("My value is : " + ((TreeNode) fargs[0]).getValue());
-                        System.out.println("Let's run PrintVisitor's implementation too!");
-                        method.invoke(p, (TreeNode) fargs[0]); // This is redundant, just for demo
-                    } else if (fargs[0] instanceof GraphNode) {
-                        System.out.println("I am a GraphNode running through the proxy");
-                        System.out.println("My value is : " + ((GraphNode) fargs[0]).getValue());
-                        System.out.println("Let's run PrintVisitor's implementation too!");
-                        method.invoke(p, (GraphNode) fargs[0]); // This is redundant, just for demo
-                        System.out.println("----- Finished --------");
+                    if (method.getName().equals("visit")) {
+                        if (fargs[0] instanceof GraphNode) {
+                            System.out.println("I am a GraphNode running through the proxy");
+                            System.out.println("My value is : " + ((GraphNode) fargs[0]).getValue());
+                            System.out.println("Let's run PrintVisitor's implementation too!");
+                            method.invoke(p, (GraphNode) fargs[0]); // This is redundant, just for demo
+                            System.out.println("----- Finished --------");
+                        } else if (fargs[0] instanceof ListNode) {
+                            System.out.println("I am a ListNode running through the proxy");
+                            System.out.println("My value is : " + ((ListNode) fargs[0]).getValue());
+                            System.out.println("Let's run PrintVisitor's implementation too!");
+                            method.invoke(p, (ListNode) fargs[0]); // This is redundant, just for demo
+                            System.out.println("----- Finished --------");
+                        } else if (fargs[0] instanceof HeapNode) {
+                            System.out.println("I am a HeapNode running through the proxy");
+                            System.out.println("My value is : " + ((HeapNode) fargs[0]).getValue());
+                            System.out.println("Let's run PrintVisitor's implementation too!");
+                            method.invoke(p, (HeapNode) fargs[0]); // This is redundant, just for demo
+                            System.out.println("----- Finished --------");
+                        } else if (fargs[0] instanceof TreeNode) {
+                            System.out.println("I am a TreeNode running through the proxy");
+                            System.out.println("My value is : " + ((TreeNode) fargs[0]).getValue());
+                            System.out.println("Let's run PrintVisitor's implementation too!");
+                            method.invoke(p, (TreeNode) fargs[0]); // This is redundant, just for demo
+                        } else if (fargs[0] instanceof GenericNode) {
+                            System.out.println("I am a GenericNode running through the proxy");
+                            System.out.println("My value is : " + ((GenericNode) fargs[0]).getValue());
+                            System.out.println("Let's run PrintVisitor's implementation too!");
+                            method.invoke(p, (GenericNode) fargs[0]); // This is redundant, just for demo
+                            System.out.println("----- Finished --------");
+                        }
                     }
                     return null;
                 });
